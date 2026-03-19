@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI360 — Admin Panel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif'],mono:['JetBrains Mono','monospace']}}}}</script>
+  <style>.fade-in{animation:fadeIn .3s ease}@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}.tab-active{color:#4F46E5;border-bottom:2px solid #4F46E5}</style>
+</head>
+<body class="h-full bg-slate-50 font-sans text-slate-900">
+
+  <!-- Top Bar (same as dashboard) -->
+  <header class="fixed top-0 left-0 right-0 h-16 bg-white border-b border-slate-200 z-50 flex items-center px-6">
+    <a href="search.html" class="flex items-center gap-2"><div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center"><span class="text-white font-bold text-sm">360</span></div><span class="font-bold text-lg">AI360</span></a>
+    <div class="flex-1 flex justify-center"><div class="w-96 flex items-center bg-slate-100 rounded-lg px-3 py-2"><svg class="w-4 h-4 text-slate-400 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg><input type="text" placeholder="Search organizations..." class="flex-1 text-sm bg-transparent outline-none placeholder:text-slate-400"></div></div>
+    <div class="flex items-center gap-4">
+      <button class="relative p-2 rounded-lg hover:bg-slate-100 transition"><svg class="w-5 h-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg></button>
+      <div class="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 rounded-full text-sm"><span class="font-medium text-slate-700">847</span></div>
+      <button class="w-8 h-8 rounded-full bg-purple-100 text-purple-700 font-semibold text-sm flex items-center justify-center">NA</button>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <aside class="fixed top-16 left-0 bottom-0 w-60 bg-white border-r border-slate-200 z-40 overflow-y-auto">
+    <nav class="py-4">
+      <div class="px-4 mb-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">Main</div>
+      <a href="search.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>Search</a>
+
+      <div class="px-4 mt-6 mb-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">Admin</div>
+      <a href="#" onclick="switchSection('orgs')" id="nav-orgs" class="flex items-center gap-3 px-4 py-2.5 text-sm bg-indigo-50 text-indigo-700 border-r-2 border-indigo-600">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"/></svg>Organizations</a>
+      <a href="#" onclick="switchSection('users')" id="nav-users" class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>Users &amp; Roles</a>
+      <a href="#" onclick="switchSection('settings')" id="nav-settings" class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Platform Settings</a>
+      <a href="#" onclick="switchSection('datasources')" id="nav-datasources" class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"/></svg>Data Sources</a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="ml-60 pt-16 min-h-screen">
+    <div class="max-w-7xl mx-auto px-6 py-6">
+
+      <!-- Section: Organizations -->
+      <div id="section-orgs" class="fade-in">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h1 class="text-2xl font-bold">Organizations</h1>
+            <p class="text-sm text-slate-500 mt-1">Manage tracked organizations, pipeline status, and scraping frequency</p>
+          </div>
+          <div class="flex gap-3">
+            <button class="px-4 py-2 rounded-lg border border-slate-300 text-sm font-medium text-slate-700 hover:bg-slate-50 transition">Trigger Seed Pipeline</button>
+            <button onclick="document.getElementById('addOrgModal').classList.remove('hidden')" class="px-4 py-2 rounded-lg bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-700 transition flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+              Add Organization
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="bg-slate-50 border-b border-slate-200">
+                <th class="text-left px-5 py-3 font-medium text-slate-600">Organization</th>
+                <th class="text-left px-5 py-3 font-medium text-slate-600">Status</th>
+                <th class="text-left px-5 py-3 font-medium text-slate-600">AI Model</th>
+                <th class="text-left px-5 py-3 font-medium text-slate-600">KG Nodes</th>
+                <th class="text-left px-5 py-3 font-medium text-slate-600">Last Scrape</th>
+                <th class="text-left px-5 py-3 font-medium text-slate-600">Frequency</th>
+                <th class="text-left px-5 py-3 font-medium text-slate-600">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr class="hover:bg-slate-50 transition">
+                <td class="px-5 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-xs">RI</div><div><div class="font-medium">Reliance Industries</div><div class="text-xs text-slate-400 font-mono">RELIANCE.NS</div></div></div></td>
+                <td class="px-5 py-4"><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700">Active</span></td>
+                <td class="px-5 py-4"><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700">Ready</span></td>
+                <td class="px-5 py-4 text-slate-600">347</td>
+                <td class="px-5 py-4 text-slate-500 text-xs">2h ago</td>
+                <td class="px-5 py-4"><select class="px-2 py-1 rounded border border-slate-300 text-xs"><option>Every 6h</option><option>Hourly</option><option selected>Every 6h</option><option>Every 12h</option><option>Daily</option></select></td>
+                <td class="px-5 py-4"><button class="text-xs text-red-600 hover:text-red-800 font-medium">Deactivate</button></td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition">
+                <td class="px-5 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-xs">TC</div><div><div class="font-medium">TCS</div><div class="text-xs text-slate-400 font-mono">TCS.NS</div></div></div></td>
+                <td class="px-5 py-4"><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700">Active</span></td>
+                <td class="px-5 py-4"><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700">Ready</span></td>
+                <td class="px-5 py-4 text-slate-600">284</td>
+                <td class="px-5 py-4 text-slate-500 text-xs">4h ago</td>
+                <td class="px-5 py-4"><select class="px-2 py-1 rounded border border-slate-300 text-xs"><option>Daily</option></select></td>
+                <td class="px-5 py-4"><button class="text-xs text-red-600 hover:text-red-800 font-medium">Deactivate</button></td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition">
+                <td class="px-5 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center text-amber-700 font-bold text-xs">WP</div><div><div class="font-medium">Wipro</div><div class="text-xs text-slate-400 font-mono">WIPRO.NS</div></div></div></td>
+                <td class="px-5 py-4"><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 animate-pulse">Building</span></td>
+                <td class="px-5 py-4"><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700">Initializing</span></td>
+                <td class="px-5 py-4 text-slate-600">89</td>
+                <td class="px-5 py-4 text-slate-500 text-xs">In progress</td>
+                <td class="px-5 py-4"><select class="px-2 py-1 rounded border border-slate-300 text-xs"><option>Daily</option></select></td>
+                <td class="px-5 py-4"><button class="text-xs text-slate-400 cursor-not-allowed">Building...</button></td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition bg-slate-50/50">
+                <td class="px-5 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 font-bold text-xs">SB</div><div><div class="font-medium text-slate-400">SBI</div><div class="text-xs text-slate-300 font-mono">SBIN.NS</div></div></div></td>
+                <td class="px-5 py-4"><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-500">Inactive</span></td>
+                <td class="px-5 py-4"><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-500">Paused</span></td>
+                <td class="px-5 py-4 text-slate-400">201</td>
+                <td class="px-5 py-4 text-slate-400 text-xs">5 days ago</td>
+                <td class="px-5 py-4 text-slate-400 text-xs">—</td>
+                <td class="px-5 py-4"><button class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">Reactivate</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Section: Users -->
+      <div id="section-users" class="hidden fade-in">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h1 class="text-2xl font-bold">Users & Roles</h1>
+            <p class="text-sm text-slate-500 mt-1">Manage user roles and view audit log</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <input type="text" placeholder="Search users..." class="px-4 py-2 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none w-64">
+            <select class="px-3 py-2 rounded-lg border border-slate-300 text-sm"><option>All Roles</option><option>Admin</option><option>Analyst</option><option>Viewer</option></select>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="bg-slate-50 border-b border-slate-200">
+                <th class="text-left px-5 py-3 font-medium text-slate-600">User</th>
+                <th class="text-left px-5 py-3 font-medium text-slate-600">Role</th>
+                <th class="text-left px-5 py-3 font-medium text-slate-600">Credits</th>
+                <th class="text-left px-5 py-3 font-medium text-slate-600">Last Login</th>
+                <th class="text-left px-5 py-3 font-medium text-slate-600">Joined</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr class="hover:bg-slate-50">
+                <td class="px-5 py-4"><div><div class="font-medium">Nitin Agarwal</div><div class="text-xs text-slate-400">nitin.agarwal@corp.com</div></div></td>
+                <td class="px-5 py-4"><select class="px-2 py-1 rounded border border-slate-300 text-xs font-medium"><option selected>Admin</option><option>Analyst</option><option>Viewer</option></select></td>
+                <td class="px-5 py-4 text-slate-600">847</td>
+                <td class="px-5 py-4 text-slate-500 text-xs">Just now</td>
+                <td class="px-5 py-4 text-slate-500 text-xs">Mar 1, 2026</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-5 py-4"><div><div class="font-medium">Priya Sharma</div><div class="text-xs text-slate-400">priya.sharma@corp.com</div></div></td>
+                <td class="px-5 py-4"><select class="px-2 py-1 rounded border border-slate-300 text-xs font-medium"><option>Admin</option><option selected>Analyst</option><option>Viewer</option></select></td>
+                <td class="px-5 py-4 text-slate-600">1,250</td>
+                <td class="px-5 py-4 text-slate-500 text-xs">2h ago</td>
+                <td class="px-5 py-4 text-slate-500 text-xs">Mar 5, 2026</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-5 py-4"><div><div class="font-medium">Rahul Verma</div><div class="text-xs text-slate-400">rahul.verma@corp.com</div></div></td>
+                <td class="px-5 py-4"><select class="px-2 py-1 rounded border border-slate-300 text-xs font-medium"><option>Admin</option><option>Analyst</option><option selected>Viewer</option></select></td>
+                <td class="px-5 py-4 text-slate-600">500</td>
+                <td class="px-5 py-4 text-slate-500 text-xs">1 day ago</td>
+                <td class="px-5 py-4 text-slate-500 text-xs">Mar 10, 2026</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Section: Platform Settings -->
+      <div id="section-settings" class="hidden fade-in">
+        <div class="mb-6">
+          <h1 class="text-2xl font-bold">Platform Settings</h1>
+          <p class="text-sm text-slate-500 mt-1">Configure LLM provider, embedding model, and defaults</p>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white rounded-xl border border-slate-200 p-6">
+            <h3 class="font-semibold mb-4">LLM Configuration</h3>
+            <div class="space-y-4">
+              <div><label class="block text-sm font-medium text-slate-700 mb-1">Provider</label><select class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm"><option selected>Anthropic</option><option>OpenAI</option><option>Self-hosted</option></select></div>
+              <div><label class="block text-sm font-medium text-slate-700 mb-1">Model</label><input type="text" value="claude-sonnet-4-20250514" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm font-mono"></div>
+              <div><label class="block text-sm font-medium text-slate-700 mb-1">API Key</label><input type="password" value="sk-ant-••••••••••••" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm font-mono"></div>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl border border-slate-200 p-6">
+            <h3 class="font-semibold mb-4">Embedding Configuration</h3>
+            <div class="space-y-4">
+              <div><label class="block text-sm font-medium text-slate-700 mb-1">Provider</label><select class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm"><option selected>BGE-M3 (Self-hosted)</option><option>OpenAI</option><option>Cohere</option><option>Sentence Transformers</option></select></div>
+              <div><label class="block text-sm font-medium text-slate-700 mb-1">Model</label><input type="text" value="BAAI/bge-m3" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm font-mono"></div>
+              <div><label class="block text-sm font-medium text-slate-700 mb-1">Dimensions</label><input type="number" value="1024" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm font-mono"></div>
+              <div><label class="block text-sm font-medium text-slate-700 mb-1">Endpoint URL</label><input type="text" value="http://ai360-embedding-server:8080" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm font-mono"></div>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl border border-slate-200 p-6">
+            <h3 class="font-semibold mb-4">Defaults</h3>
+            <div class="space-y-4">
+              <div><label class="block text-sm font-medium text-slate-700 mb-1">Default User Role</label><select class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm"><option>Admin</option><option>Analyst</option><option selected>Viewer</option></select></div>
+              <div><label class="block text-sm font-medium text-slate-700 mb-1">Default Scraping Frequency</label><select class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm"><option>Hourly</option><option>Every 6 hours</option><option>Every 12 hours</option><option selected>Daily</option></select></div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-6 flex justify-end">
+          <button class="px-6 py-2.5 rounded-lg bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-700 transition">Save Settings</button>
+        </div>
+      </div>
+
+      <!-- Section: Data Sources -->
+      <div id="section-datasources" class="hidden fade-in">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h1 class="text-2xl font-bold">Data Sources</h1>
+            <p class="text-sm text-slate-500 mt-1">Manage financial and news API adapters</p>
+          </div>
+          <button class="px-4 py-2 rounded-lg bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-700 transition flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+            Add Data Source
+          </button>
+        </div>
+        <div class="space-y-4">
+          <div class="bg-white rounded-xl border border-slate-200 p-5 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-xs">YF</div>
+              <div><div class="font-medium text-sm">Yahoo Finance</div><div class="text-xs text-slate-400">Financial · Default · Priority 1</div></div>
+            </div>
+            <div class="flex items-center gap-4">
+              <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700">Enabled</span>
+              <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-500">Default</span>
+              <button class="text-xs text-slate-500 hover:text-slate-700">Disable</button>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl border border-slate-200 p-5 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-xs">AV</div>
+              <div><div class="font-medium text-sm">Alpha Vantage</div><div class="text-xs text-slate-400">Financial · Default · Priority 2</div></div>
+            </div>
+            <div class="flex items-center gap-4">
+              <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700">Enabled</span>
+              <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-500">Default</span>
+              <button class="text-xs text-slate-500 hover:text-slate-700">Disable</button>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl border border-slate-200 p-5 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center text-red-700 font-bold text-xs">NA</div>
+              <div><div class="font-medium text-sm">NewsAPI</div><div class="text-xs text-slate-400">News · Default · Priority 1</div></div>
+            </div>
+            <div class="flex items-center gap-4">
+              <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700">Enabled</span>
+              <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-500">Default</span>
+              <button class="text-xs text-slate-500 hover:text-slate-700">Disable</button>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl border border-slate-200 p-5 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center text-amber-700 font-bold text-xs">GN</div>
+              <div><div class="font-medium text-sm">Google News RSS</div><div class="text-xs text-slate-400">News · Default · Priority 2</div></div>
+            </div>
+            <div class="flex items-center gap-4">
+              <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700">Enabled</span>
+              <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-500">Default</span>
+              <button class="text-xs text-slate-500 hover:text-slate-700">Disable</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Add Organization Modal -->
+  <div id="addOrgModal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="document.getElementById('addOrgModal').classList.add('hidden')"></div>
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 fade-in p-6">
+      <h2 class="text-lg font-semibold mb-6">Add Organization</h2>
+      <div class="space-y-4">
+        <div><label class="block text-sm font-medium text-slate-700 mb-1">Name <span class="text-red-500">*</span></label><input type="text" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none" placeholder="e.g., Larsen & Toubro"></div>
+        <div><label class="block text-sm font-medium text-slate-700 mb-1">Ticker Symbol</label><input type="text" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm font-mono focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none" placeholder="e.g., LT.NS"></div>
+        <div><label class="block text-sm font-medium text-slate-700 mb-1">Sector <span class="text-red-500">*</span></label><select class="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm"><option value="">Select...</option><option>IT Services</option><option>Banking</option><option>Conglomerate</option><option>Infrastructure</option><option>Pharmaceuticals</option><option>Energy</option></select></div>
+      </div>
+      <div class="mt-6 flex gap-3">
+        <button onclick="document.getElementById('addOrgModal').classList.add('hidden')" class="flex-1 px-4 py-2.5 rounded-lg border border-slate-300 text-sm font-medium text-slate-700 hover:bg-slate-50">Cancel</button>
+        <button onclick="document.getElementById('addOrgModal').classList.add('hidden')" class="flex-1 px-4 py-2.5 rounded-lg bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-700">Add & Start Pipeline</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const sections = ['orgs','users','settings','datasources'];
+    function switchSection(name) {
+      sections.forEach(s => {
+        document.getElementById('section-'+s)?.classList.add('hidden');
+        const nav = document.getElementById('nav-'+s);
+        if(nav){nav.className='flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50';}
+      });
+      document.getElementById('section-'+name)?.classList.remove('hidden');
+      const activeNav = document.getElementById('nav-'+name);
+      if(activeNav){activeNav.className='flex items-center gap-3 px-4 py-2.5 text-sm bg-indigo-50 text-indigo-700 border-r-2 border-indigo-600';}
+    }
+  </script>
+</body>
+</html>

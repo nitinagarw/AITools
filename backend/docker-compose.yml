@@ -1,0 +1,321 @@
+version: "3.9"
+
+services:
+  # ─── Infrastructure ───────────────────────────────────────
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ai360
+      POSTGRES_PASSWORD: ai360_secret
+      POSTGRES_DB: ai360
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./database/scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ai360"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  neo4j:
+    image: neo4j:5-community
+    environment:
+      NEO4J_AUTH: neo4j/neo4j_secret
+      NEO4J_PLUGINS: '["apoc"]'
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4jdata:/data
+    healthcheck:
+      test: ["CMD-SHELL", "cypher-shell -u neo4j -p neo4j_secret 'RETURN 1'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ai360minio
+      MINIO_ROOT_PASSWORD: ai360minio_secret
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - miniodata:/data
+
+  # ─── Services ─────────────────────────────────────────────
+
+  gateway:
+    build:
+      context: .
+      dockerfile: services/gateway/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      SERVICE_NAME: api-gateway
+      PORT: "8000"
+      JWT_INTERNAL_SECRET: internal-cluster-key
+      USER_SERVICE_URL: http://user-service:8001
+      ORG_SERVICE_URL: http://org-service:8002
+      INTELLIGENCE_SERVICE_URL: http://intelligence-service:8003
+      PIPELINE_SERVICE_URL: http://pipeline-service:8004
+      NOTIFICATION_SERVICE_URL: http://notification-service:8005
+      CREDIT_SERVICE_URL: http://credit-service:8006
+      EXPORT_SERVICE_URL: http://export-service:8007
+      SSO_ISSUER_URL: https://sso.example.com
+    depends_on:
+      - user-service
+
+  user-service:
+    build:
+      context: .
+      dockerfile: services/user_service/Dockerfile
+    ports:
+      - "8001:8001"
+    environment:
+      SERVICE_NAME: user-service
+      PORT: "8001"
+      DB_HOST: postgres
+      DB_NAME: user_db
+      DB_USER: ai360
+      DB_PASSWORD: ai360_secret
+      REDIS_HOST: redis
+      JWT_INTERNAL_SECRET: internal-cluster-key
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  org-service:
+    build:
+      context: .
+      dockerfile: services/org_service/Dockerfile
+    ports:
+      - "8002:8002"
+    environment:
+      SERVICE_NAME: org-service
+      PORT: "8002"
+      DB_HOST: postgres
+      DB_NAME: org_db
+      DB_USER: ai360
+      DB_PASSWORD: ai360_secret
+      REDIS_HOST: redis
+      JWT_INTERNAL_SECRET: internal-cluster-key
+      INTELLIGENCE_SERVICE_URL: http://intelligence-service:8003
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  intelligence-service:
+    build:
+      context: .
+      dockerfile: services/intelligence_service/Dockerfile
+    ports:
+      - "8003:8003"
+    environment:
+      SERVICE_NAME: intelligence-service
+      PORT: "8003"
+      DB_HOST: postgres
+      DB_NAME: intelligence_db
+      DB_USER: ai360
+      DB_PASSWORD: ai360_secret
+      REDIS_HOST: redis
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: neo4j_secret
+      JWT_INTERNAL_SECRET: internal-cluster-key
+      LLM_PROVIDER: anthropic
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+
+  pipeline-service:
+    build:
+      context: .
+      dockerfile: services/pipeline_service/Dockerfile
+    ports:
+      - "8004:8004"
+    environment:
+      SERVICE_NAME: pipeline-service
+      PORT: "8004"
+      DB_HOST: postgres
+      DB_NAME: pipeline_db
+      DB_USER: ai360
+      DB_PASSWORD: ai360_secret
+      REDIS_HOST: redis
+      JWT_INTERNAL_SECRET: internal-cluster-key
+      CREDIT_SERVICE_URL: http://credit-service:8006
+      ORG_SERVICE_URL: http://org-service:8002
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: services/notification_service/Dockerfile
+    ports:
+      - "8005:8005"
+    environment:
+      SERVICE_NAME: notification-service
+      PORT: "8005"
+      DB_HOST: postgres
+      DB_NAME: notification_db
+      DB_USER: ai360
+      DB_PASSWORD: ai360_secret
+      REDIS_HOST: redis
+      JWT_INTERNAL_SECRET: internal-cluster-key
+      USER_SERVICE_URL: http://user-service:8001
+      SENDGRID_API_KEY: ${SENDGRID_API_KEY:-}
+      TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID:-}
+      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  credit-service:
+    build:
+      context: .
+      dockerfile: services/credit_service/Dockerfile
+    ports:
+      - "8006:8006"
+    environment:
+      SERVICE_NAME: credit-service
+      PORT: "8006"
+      DB_HOST: postgres
+      DB_NAME: credit_db
+      DB_USER: ai360
+      DB_PASSWORD: ai360_secret
+      REDIS_HOST: redis
+      JWT_INTERNAL_SECRET: internal-cluster-key
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  export-service:
+    build:
+      context: .
+      dockerfile: services/export_service/Dockerfile
+    ports:
+      - "8007:8007"
+    environment:
+      SERVICE_NAME: export-service
+      PORT: "8007"
+      DB_HOST: postgres
+      DB_NAME: export_db
+      DB_USER: ai360
+      DB_PASSWORD: ai360_secret
+      REDIS_HOST: redis
+      JWT_INTERNAL_SECRET: internal-cluster-key
+      S3_ENDPOINT: http://minio:9000
+      S3_ACCESS_KEY: ai360minio
+      S3_SECRET_KEY: ai360minio_secret
+      S3_BUCKET: ai360-exports
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_started
+
+  ingestion-service:
+    build:
+      context: .
+      dockerfile: services/ingestion_service/Dockerfile
+    environment:
+      SERVICE_NAME: ingestion-service
+      REDIS_HOST: redis
+      DB_HOST: postgres
+      DB_NAME: org_db
+      DB_USER: ai360
+      DB_PASSWORD: ai360_secret
+      JWT_INTERNAL_SECRET: internal-cluster-key
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  knowledge-engine:
+    build:
+      context: .
+      dockerfile: services/knowledge_engine/Dockerfile
+    environment:
+      SERVICE_NAME: knowledge-engine
+      REDIS_HOST: redis
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: neo4j_secret
+      EMBEDDING_ENDPOINT: http://embedding-server:8080
+      JWT_INTERNAL_SECRET: internal-cluster-key
+    depends_on:
+      neo4j:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # ─── Worker ───────────────────────────────────────────────
+
+  celery-worker:
+    build:
+      context: .
+      dockerfile: services/ingestion_service/Dockerfile
+    command: celery -A services.ingestion_service.worker worker -l info -Q scraping,enrichment
+    environment:
+      REDIS_HOST: redis
+      DB_HOST: postgres
+      DB_NAME: org_db
+      DB_USER: ai360
+      DB_PASSWORD: ai360_secret
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  celery-beat:
+    build:
+      context: .
+      dockerfile: services/ingestion_service/Dockerfile
+    command: celery -A services.ingestion_service.worker beat -l info
+    environment:
+      REDIS_HOST: redis
+      DB_HOST: postgres
+      DB_NAME: org_db
+      DB_USER: ai360
+      DB_PASSWORD: ai360_secret
+    depends_on:
+      redis:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  neo4jdata:
+  redisdata:
+  miniodata:

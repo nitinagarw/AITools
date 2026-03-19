@@ -1,0 +1,88 @@
+# Project Cursor Rules — AI360
+
+## General
+
+- Always refer to the PRD at docs/PRD.md for feature requirements and acceptance criteria before implementing.
+- Always refer to docs/architecture.md for the microservices architecture, service boundaries, data ownership, inter-service communication, and event catalog.
+- Follow the project's existing patterns and conventions when adding new code.
+- Write clear, self-documenting code. Avoid unnecessary comments that just restate what the code does.
+
+## Microservices Architecture
+
+- The system is decomposed into 10 microservices: API Gateway, User Service, Organization Service, Ingestion Service, Knowledge Engine, Intelligence Service, Notification Service, Credit Service, Export Service, Pipeline Orchestrator.
+- Each service owns its data store (database-per-service). Never query another service's database directly — use internal REST APIs or events.
+- Synchronous REST calls for query-time reads; asynchronous events (Redis Streams) for pipeline orchestration and cross-service coordination.
+- All inter-service REST calls use internal JWT authentication (cluster-internal signing key).
+- Every service must expose `/health/live` and `/health/ready` endpoints for Kubernetes probes.
+- Use the event envelope format defined in docs/architecture.md. Always include `correlation_id` in events and propagate it via `X-Correlation-ID` header.
+- Pipeline stages must be idempotent — processing the same event twice must produce the same result.
+- External dependency calls (LLM, data source APIs, notification providers) must use the circuit breaker pattern.
+- Service-specific code lives in its own top-level directory (e.g., `services/user-service/`, `services/org-service/`). Shared libraries live in `libs/`.
+
+## Tech Stack
+
+- Backend: Python 3.10+ with FastAPI.
+- Frontend: React 18 with TypeScript.
+- Styling: Tailwind CSS. Do not use inline styles.
+- State management: Use React hooks and context. Only introduce Redux if complexity demands it.
+- Relational database: PostgreSQL with SQLAlchemy ORM. No raw SQL queries.
+- Knowledge graph & vector store: Neo4j via the official Python driver. Use Neo4j's native vector index for embedding storage and similarity search.
+- Background tasks: Celery with Redis as the message broker for scraping and analysis pipelines.
+- AI/LLM: Use a provider-agnostic abstraction layer so the LLM can be swapped without code changes. Default provider is Anthropic (Claude). All LLM calls must go through the abstraction layer (never call a specific provider SDK directly). Provider and model are read from PlatformSettings at runtime.
+- Agentic AI: Use LangGraph for the Annual Report processing pipeline. Each agent should be independently testable. Use LangGraph's stateful graph execution for multi-step workflows.
+- Embeddings: The embedding model is configurable via a provider-agnostic interface. Default is self-hosted BGE-M3 (BAAI, 1024-dim). All embedding calls must go through the abstraction layer (never call a specific provider directly). Store embeddings in Neo4j's native vector index. Vector dimensions are read from config, not hardcoded.
+
+## Code Style
+
+- Python: Follow PEP 8. Use type hints for all function signatures.
+- TypeScript: Use strict mode. Prefer interfaces over type aliases for object shapes.
+- React: Use functional components with hooks. No class components.
+- Naming: Use snake_case for Python, camelCase for TypeScript variables/functions, PascalCase for React components and TypeScript interfaces.
+
+## API Design
+
+- RESTful endpoints following the patterns defined in docs/PRD.md and docs/architecture.md.
+- All API responses use a consistent envelope: { "data": ..., "error": null } or { "data": null, "error": { "message": "..." } }.
+- Validate all request inputs using Pydantic models (backend).
+- Internal service-to-service APIs live under `/internal/` and are not routed through the API Gateway. They use internal JWT auth.
+- The API Gateway handles all external-facing routing, SSO authentication, RBAC enforcement, rate limiting, and CORS.
+
+## Data Ingestion & Scraping
+
+- All web scraping must respect robots.txt directives of target sites.
+- Only ingest publicly available, non-paywalled content (unless using a paid data source with proper licensing).
+- Scraping tasks run as Celery background jobs, never in the request/response cycle.
+- Scraping frequency is admin-configurable per organization (stored in Organization.scraping_frequency). Read from DB, never hardcode intervals.
+- Financial and news data sources use a pluggable adapter pattern. All data source calls must go through the adapter interface (never call a specific API directly). New sources are added via DataSourceConfig, not code changes.
+- Deduplicate news articles by source URL before storing. When multiple sources return the same data, merge by priority order.
+- News articles have a 7-year retention policy (retention_expires_at = published_at + 7 years). A scheduled job handles archival/purge. Financial snapshots, analysis reports, Annual Reports, knowledge graph data, and embeddings are persisted indefinitely — never delete them.
+
+## Testing
+
+- Write unit tests for all new backend modules using pytest.
+- Write component tests for React components using React Testing Library.
+- Acceptance criteria from the PRD should map to test cases.
+
+## Security & RBAC
+
+- All endpoints require authentication via corporate SSO.
+- Role-based access control (RBAC) is enforced at the API layer using FastAPI dependencies. Three roles: Admin, Analyst, Viewer.
+- Use a reusable dependency (e.g., `require_role("admin")`) to protect endpoints. Never check roles with ad-hoc logic.
+- The frontend must hide or disable UI elements based on the user's role (fetched via GET /api/me at session start).
+- Sanitize all user inputs before processing.
+- Never log sensitive data (tokens, passwords, PII).
+- Never store proprietary or paywalled content (unless sourced from a licensed paid data provider).
+
+## Notifications
+
+- All notifications must go through the notification dispatcher service. Never send emails/SMS/push directly from business logic.
+- In-app notifications are always created. Email, SMS, and push delivery depend on the user's NotificationPreferences.
+- Respect quiet hours — queue non-critical notifications during quiet hours and deliver when they end.
+- Log delivery status per channel for every notification.
+
+## Credits & Billing
+
+- All billable actions (analysis requests, exports, AI Q&A queries) must check credit balance and quota before execution. Never debit credits after the action — always check and reserve first.
+- Credit pricing is read from the CreditPricing table at runtime, never hardcoded.
+- Quota limits are enforced at the API layer. Return a clear 402/403 response when credits are insufficient or quota is reached.
+- Credit balance must never go negative. Use database-level constraints or transactions to ensure atomicity.

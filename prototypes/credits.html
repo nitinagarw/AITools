@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI360 — Credits & Settings</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif'],mono:['JetBrains Mono','monospace']}}}}</script>
+  <style>.fade-in{animation:fadeIn .3s ease}@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}</style>
+</head>
+<body class="h-full bg-slate-50 font-sans text-slate-900">
+
+  <!-- Top Bar -->
+  <header class="fixed top-0 left-0 right-0 h-16 bg-white border-b border-slate-200 z-50 flex items-center px-6">
+    <a href="search.html" class="flex items-center gap-2"><div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center"><span class="text-white font-bold text-sm">360</span></div><span class="font-bold text-lg">AI360</span></a>
+    <div class="flex-1 flex justify-center"><div class="w-96 flex items-center bg-slate-100 rounded-lg px-3 py-2"><svg class="w-4 h-4 text-slate-400 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg><input type="text" placeholder="Search organizations..." class="flex-1 text-sm bg-transparent outline-none placeholder:text-slate-400"></div></div>
+    <div class="flex items-center gap-4">
+      <button class="relative p-2 rounded-lg hover:bg-slate-100 transition"><svg class="w-5 h-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg><span class="absolute top-1 right-1 w-4 h-4 bg-red-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center">3</span></button>
+      <div class="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-full text-sm"><svg class="w-4 h-4 text-amber-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/></svg><span class="font-medium text-amber-700">847</span></div>
+      <button class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 font-semibold text-sm flex items-center justify-center">NA</button>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <aside class="fixed top-16 left-0 bottom-0 w-60 bg-white border-r border-slate-200 z-40 overflow-y-auto">
+    <nav class="py-4">
+      <div class="px-4 mb-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">Main</div>
+      <a href="search.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>Search</a>
+      <a href="#" onclick="switchSection('requests')" id="nav-requests" class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>My Requests</a>
+
+      <div class="px-4 mt-6 mb-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">Account</div>
+      <a href="#" onclick="switchSection('credits')" id="nav-credits" class="flex items-center gap-3 px-4 py-2.5 text-sm bg-indigo-50 text-indigo-700 border-r-2 border-indigo-600"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/></svg>Credits & Billing</a>
+      <a href="#" onclick="switchSection('notifprefs')" id="nav-notifprefs" class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>Notification Prefs</a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="ml-60 pt-16 min-h-screen">
+    <div class="max-w-7xl mx-auto px-6 py-6">
+
+      <!-- Section: Credits -->
+      <div id="section-credits" class="fade-in">
+        <h1 class="text-2xl font-bold mb-6">Credits & Billing</h1>
+
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
+          <div class="bg-white rounded-xl border border-slate-200 p-5">
+            <div class="text-sm text-slate-500 mb-1">Credit Balance</div>
+            <div class="text-3xl font-bold text-slate-900">847</div>
+            <div class="text-xs text-amber-600 mt-1 font-medium">Below threshold (1,000)</div>
+          </div>
+          <div class="bg-white rounded-xl border border-slate-200 p-5">
+            <div class="text-sm text-slate-500 mb-1">Quota Limit</div>
+            <div class="text-3xl font-bold text-slate-900">500<span class="text-sm text-slate-400 font-normal">/cycle</span></div>
+            <div class="text-xs text-slate-400 mt-1">Max available: 847</div>
+          </div>
+          <div class="bg-white rounded-xl border border-slate-200 p-5">
+            <div class="text-sm text-slate-500 mb-1">Used This Cycle</div>
+            <div class="text-3xl font-bold text-slate-900">312</div>
+            <div class="w-full h-2 bg-slate-100 rounded-full mt-2"><div class="h-full bg-indigo-500 rounded-full" style="width:62%"></div></div>
+            <div class="text-xs text-slate-400 mt-1">62% of quota</div>
+          </div>
+          <div class="bg-white rounded-xl border border-slate-200 p-5">
+            <div class="text-sm text-slate-500 mb-1">Billing Cycle</div>
+            <div class="text-lg font-bold text-slate-900">Mar 1 — Mar 30</div>
+            <div class="text-xs text-slate-400 mt-1">Resets in 12 days</div>
+          </div>
+        </div>
+
+        <!-- Quota Slider -->
+        <div class="bg-white rounded-xl border border-slate-200 p-6 mb-6">
+          <h3 class="font-semibold mb-4">Quota Settings</h3>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-2">Monthly Quota Limit</label>
+              <div class="flex items-center gap-4">
+                <input type="range" min="0" max="847" value="500" class="flex-1 h-2 bg-slate-200 rounded-full appearance-none accent-indigo-600">
+                <div class="flex items-center gap-1">
+                  <input type="number" value="500" class="w-20 px-3 py-2 rounded-lg border border-slate-300 text-sm text-center font-mono">
+                  <span class="text-sm text-slate-400">/ 847</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-slate-700 mb-2">Low Credit Alert Threshold</label>
+              <div class="flex items-center gap-3">
+                <input type="number" value="1000" class="w-32 px-3 py-2 rounded-lg border border-slate-300 text-sm font-mono">
+                <span class="text-sm text-slate-500">Notify me when balance drops below this</span>
+              </div>
+            </div>
+            <div class="flex justify-end">
+              <button class="px-4 py-2 rounded-lg bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-700 transition">Save Settings</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transaction History -->
+        <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+          <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+            <h3 class="font-semibold">Transaction History</h3>
+            <div class="flex items-center gap-2">
+              <select class="px-3 py-1.5 rounded-lg border border-slate-300 text-xs"><option>All Types</option><option>Purchase</option><option>Analysis Request</option><option>Export</option><option>AI Query</option><option>Admin Adjustment</option></select>
+              <input type="date" class="px-3 py-1.5 rounded-lg border border-slate-300 text-xs">
+            </div>
+          </div>
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="bg-slate-50 border-b border-slate-200">
+                <th class="text-left px-5 py-3 font-medium text-slate-600">Date</th>
+                <th class="text-left px-5 py-3 font-medium text-slate-600">Type</th>
+                <th class="text-left px-5 py-3 font-medium text-slate-600">Description</th>
+                <th class="text-right px-5 py-3 font-medium text-slate-600">Amount</th>
+                <th class="text-right px-5 py-3 font-medium text-slate-600">Balance</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr class="hover:bg-slate-50">
+                <td class="px-5 py-3 text-slate-500 text-xs">Mar 18, 14:32</td>
+                <td class="px-5 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-violet-50 text-violet-700">AI Query</span></td>
+                <td class="px-5 py-3 text-slate-600">Chat: Reliance Industries</td>
+                <td class="px-5 py-3 text-right text-red-600 font-mono">-1</td>
+                <td class="px-5 py-3 text-right text-slate-600 font-mono">847</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-5 py-3 text-slate-500 text-xs">Mar 18, 11:15</td>
+                <td class="px-5 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700">Export</span></td>
+                <td class="px-5 py-3 text-slate-600">PDF Export: TCS</td>
+                <td class="px-5 py-3 text-right text-red-600 font-mono">-5</td>
+                <td class="px-5 py-3 text-right text-slate-600 font-mono">848</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-5 py-3 text-slate-500 text-xs">Mar 17, 16:45</td>
+                <td class="px-5 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700">Analysis</span></td>
+                <td class="px-5 py-3 text-slate-600">Analysis request: Wipro</td>
+                <td class="px-5 py-3 text-right text-red-600 font-mono">-25</td>
+                <td class="px-5 py-3 text-right text-slate-600 font-mono">853</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-5 py-3 text-slate-500 text-xs">Mar 15, 09:00</td>
+                <td class="px-5 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700">Purchase</span></td>
+                <td class="px-5 py-3 text-slate-600">Admin top-up (500 credits)</td>
+                <td class="px-5 py-3 text-right text-emerald-600 font-mono">+500</td>
+                <td class="px-5 py-3 text-right text-slate-600 font-mono">878</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-5 py-3 text-slate-500 text-xs">Mar 14, 17:22</td>
+                <td class="px-5 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-violet-50 text-violet-700">AI Query</span></td>
+                <td class="px-5 py-3 text-slate-600">Chat: HDFC Bank (3 follow-ups)</td>
+                <td class="px-5 py-3 text-right text-red-600 font-mono">-3</td>
+                <td class="px-5 py-3 text-right text-slate-600 font-mono">378</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="px-5 py-3 border-t border-slate-200 flex items-center justify-between text-xs text-slate-400">
+            <span>Showing 5 of 47 transactions</span>
+            <div class="flex gap-1">
+              <button class="px-3 py-1 rounded border border-slate-300 hover:bg-slate-50">Previous</button>
+              <button class="px-3 py-1 rounded border border-slate-300 hover:bg-slate-50 bg-indigo-50 text-indigo-700 border-indigo-200">1</button>
+              <button class="px-3 py-1 rounded border border-slate-300 hover:bg-slate-50">2</button>
+              <button class="px-3 py-1 rounded border border-slate-300 hover:bg-slate-50">Next</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: Notification Preferences -->
+      <div id="section-notifprefs" class="hidden fade-in">
+        <h1 class="text-2xl font-bold mb-6">Notification Preferences</h1>
+
+        <!-- Channel Toggles -->
+        <div class="bg-white rounded-xl border border-slate-200 p-6 mb-6">
+          <h3 class="font-semibold mb-4">Delivery Channels</h3>
+          <div class="space-y-4">
+            <div class="flex items-center justify-between py-2">
+              <div>
+                <div class="font-medium text-sm">In-App</div>
+                <div class="text-xs text-slate-400">Always enabled — cannot be turned off</div>
+              </div>
+              <div class="w-11 h-6 bg-indigo-600 rounded-full relative cursor-not-allowed opacity-60">
+                <div class="absolute top-0.5 right-0.5 w-5 h-5 bg-white rounded-full shadow"></div>
+              </div>
+            </div>
+            <div class="flex items-center justify-between py-2 border-t border-slate-100">
+              <div>
+                <div class="font-medium text-sm">Email</div>
+                <div class="text-xs text-slate-400">nitin.agarwal@corp.com</div>
+              </div>
+              <div class="w-11 h-6 bg-indigo-600 rounded-full relative cursor-pointer">
+                <div class="absolute top-0.5 right-0.5 w-5 h-5 bg-white rounded-full shadow"></div>
+              </div>
+            </div>
+            <div class="flex items-center justify-between py-2 border-t border-slate-100">
+              <div>
+                <div class="font-medium text-sm">SMS</div>
+                <div class="text-xs text-slate-400">Not configured</div>
+              </div>
+              <div class="w-11 h-6 bg-slate-200 rounded-full relative cursor-pointer">
+                <div class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow"></div>
+              </div>
+            </div>
+            <div class="flex items-center justify-between py-2 border-t border-slate-100">
+              <div>
+                <div class="font-medium text-sm">Push Notifications</div>
+                <div class="text-xs text-slate-400">Not subscribed</div>
+              </div>
+              <div class="w-11 h-6 bg-slate-200 rounded-full relative cursor-pointer">
+                <div class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notification Routing Grid -->
+        <div class="bg-white rounded-xl border border-slate-200 p-6 mb-6">
+          <h3 class="font-semibold mb-4">Notification Routing</h3>
+          <p class="text-xs text-slate-400 mb-4">Choose which channels each notification type is delivered through. In-app is always on.</p>
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-slate-200">
+                <th class="text-left py-2 font-medium text-slate-600">Event</th>
+                <th class="text-center py-2 font-medium text-slate-400 w-20">In-App</th>
+                <th class="text-center py-2 font-medium text-slate-600 w-20">Email</th>
+                <th class="text-center py-2 font-medium text-slate-400 w-20">SMS</th>
+                <th class="text-center py-2 font-medium text-slate-400 w-20">Push</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr>
+                <td class="py-3 text-slate-700">Analysis Ready</td>
+                <td class="py-3 text-center"><input type="checkbox" checked disabled class="rounded border-slate-300 text-indigo-600"></td>
+                <td class="py-3 text-center"><input type="checkbox" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"></td>
+                <td class="py-3 text-center"><input type="checkbox" disabled class="rounded border-slate-200 text-slate-300"></td>
+                <td class="py-3 text-center"><input type="checkbox" disabled class="rounded border-slate-200 text-slate-300"></td>
+              </tr>
+              <tr>
+                <td class="py-3 text-slate-700">Analysis Failed</td>
+                <td class="py-3 text-center"><input type="checkbox" checked disabled class="rounded border-slate-300 text-indigo-600"></td>
+                <td class="py-3 text-center"><input type="checkbox" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"></td>
+                <td class="py-3 text-center"><input type="checkbox" disabled class="rounded border-slate-200 text-slate-300"></td>
+                <td class="py-3 text-center"><input type="checkbox" disabled class="rounded border-slate-200 text-slate-300"></td>
+              </tr>
+              <tr>
+                <td class="py-3 text-slate-700">Export Ready</td>
+                <td class="py-3 text-center"><input type="checkbox" checked disabled class="rounded border-slate-300 text-indigo-600"></td>
+                <td class="py-3 text-center"><input type="checkbox" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"></td>
+                <td class="py-3 text-center"><input type="checkbox" disabled class="rounded border-slate-200 text-slate-300"></td>
+                <td class="py-3 text-center"><input type="checkbox" disabled class="rounded border-slate-200 text-slate-300"></td>
+              </tr>
+              <tr>
+                <td class="py-3 text-slate-700">Credits Low</td>
+                <td class="py-3 text-center"><input type="checkbox" checked disabled class="rounded border-slate-300 text-indigo-600"></td>
+                <td class="py-3 text-center"><input type="checkbox" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"></td>
+                <td class="py-3 text-center"><input type="checkbox" disabled class="rounded border-slate-200 text-slate-300"></td>
+                <td class="py-3 text-center"><input type="checkbox" disabled class="rounded border-slate-200 text-slate-300"></td>
+              </tr>
+              <tr>
+                <td class="py-3 text-slate-700">Quota Reached</td>
+                <td class="py-3 text-center"><input type="checkbox" checked disabled class="rounded border-slate-300 text-indigo-600"></td>
+                <td class="py-3 text-center"><input type="checkbox" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"></td>
+                <td class="py-3 text-center"><input type="checkbox" disabled class="rounded border-slate-200 text-slate-300"></td>
+                <td class="py-3 text-center"><input type="checkbox" disabled class="rounded border-slate-200 text-slate-300"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Quiet Hours -->
+        <div class="bg-white rounded-xl border border-slate-200 p-6 mb-6">
+          <h3 class="font-semibold mb-4">Quiet Hours</h3>
+          <p class="text-xs text-slate-400 mb-4">Non-critical notifications are queued during quiet hours and delivered when they end.</p>
+          <div class="flex items-center gap-4">
+            <div>
+              <label class="block text-xs font-medium text-slate-600 mb-1">Start</label>
+              <input type="time" value="22:00" class="px-3 py-2 rounded-lg border border-slate-300 text-sm">
+            </div>
+            <span class="text-slate-400 mt-5">to</span>
+            <div>
+              <label class="block text-xs font-medium text-slate-600 mb-1">End</label>
+              <input type="time" value="07:00" class="px-3 py-2 rounded-lg border border-slate-300 text-sm">
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-end">
+          <button class="px-6 py-2.5 rounded-lg bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-700 transition">Save Preferences</button>
+        </div>
+      </div>
+
+      <!-- Section: My Requests -->
+      <div id="section-requests" class="hidden fade-in">
+        <h1 class="text-2xl font-bold mb-6">My Analysis Requests</h1>
+        <div class="space-y-4">
+          <!-- Ready Request -->
+          <div class="bg-white rounded-xl border border-slate-200 p-5">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-sm">RI</div>
+                <div>
+                  <div class="font-medium">Reliance Industries</div>
+                  <div class="text-xs text-slate-400">Submitted Mar 10, 2026 · Completed in 22 min</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700">Ready</span>
+                <a href="dashboard.html" class="text-xs text-indigo-600 font-medium hover:text-indigo-800">View Dashboard →</a>
+              </div>
+            </div>
+            <!-- Pipeline Progress -->
+            <div class="mt-4 flex items-center gap-1">
+              <div class="flex-1 h-1.5 rounded-full bg-emerald-500"></div>
+              <div class="flex-1 h-1.5 rounded-full bg-emerald-500"></div>
+              <div class="flex-1 h-1.5 rounded-full bg-emerald-500"></div>
+              <div class="flex-1 h-1.5 rounded-full bg-emerald-500"></div>
+              <div class="flex-1 h-1.5 rounded-full bg-emerald-500"></div>
+            </div>
+            <div class="mt-1.5 flex justify-between text-[10px] text-slate-400">
+              <span>Scraping</span><span>KG Build</span><span>AI Model</span><span>Analysis</span><span>Ready</span>
+            </div>
+          </div>
+
+          <!-- In-Progress Request -->
+          <div class="bg-white rounded-xl border border-indigo-200 p-5 ring-1 ring-indigo-100">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center text-amber-700 font-bold text-sm animate-pulse">WP</div>
+                <div>
+                  <div class="font-medium">Wipro</div>
+                  <div class="text-xs text-slate-400">Submitted Mar 17, 2026 · ETA: ~8 min remaining</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 animate-pulse">Building KG</span>
+                <button class="text-xs text-red-500 font-medium hover:text-red-700">Cancel</button>
+              </div>
+            </div>
+            <div class="mt-4 flex items-center gap-1">
+              <div class="flex-1 h-1.5 rounded-full bg-emerald-500"></div>
+              <div class="flex-1 h-1.5 rounded-full bg-indigo-500 animate-pulse"></div>
+              <div class="flex-1 h-1.5 rounded-full bg-slate-200"></div>
+              <div class="flex-1 h-1.5 rounded-full bg-slate-200"></div>
+              <div class="flex-1 h-1.5 rounded-full bg-slate-200"></div>
+            </div>
+            <div class="mt-1.5 flex justify-between text-[10px] text-slate-400">
+              <span class="text-emerald-600">Scraping ✓</span><span class="text-indigo-600 font-medium">KG Build...</span><span>AI Model</span><span>Analysis</span><span>Ready</span>
+            </div>
+          </div>
+
+          <!-- Failed Request -->
+          <div class="bg-white rounded-xl border border-red-200 p-5">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center text-red-700 font-bold text-sm">AB</div>
+                <div>
+                  <div class="font-medium">Adani Ports</div>
+                  <div class="text-xs text-slate-400">Submitted Mar 15, 2026</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-700">Failed</span>
+                <button class="text-xs text-indigo-600 font-medium hover:text-indigo-800">Retry</button>
+              </div>
+            </div>
+            <div class="mt-3 text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2">
+              Annual Report collection failed: no publicly accessible Annual Reports found for this organization. Consider uploading reports manually.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    const sections = ['credits','notifprefs','requests'];
+    function switchSection(name) {
+      sections.forEach(s => {
+        document.getElementById('section-'+s)?.classList.add('hidden');
+        const nav = document.getElementById('nav-'+s);
+        if(nav){nav.className='flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50';}
+      });
+      document.getElementById('section-'+name)?.classList.remove('hidden');
+      const activeNav = document.getElementById('nav-'+name);
+      if(activeNav){activeNav.className='flex items-center gap-3 px-4 py-2.5 text-sm bg-indigo-50 text-indigo-700 border-r-2 border-indigo-600';}
+    }
+  </script>
+</body>
+</html>
